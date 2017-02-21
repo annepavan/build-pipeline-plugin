@@ -78,10 +78,46 @@
                 </div>
 
                 <div class="icons" id="icons-{{id}}">
-                    {{#if project.parameters.length}}
-                        <j:set var="hasParameterIconUrl" value="${rootURL}/plugin/build-pipeline-plugin/images/has-parameter.png" />
-                        <img title="This job has parameters" alt="This job has parameters" src="${hasParameterIconUrl}"/>
-                    {{/if}}
+                    {{#unless build.isPending}}
+                       {{#unless build.isReadyToBeManuallyBuilt}}
+                       <j:set var="hasParameterIconUrl" value="${rootURL}/plugin/build-pipeline-plugin/images/has-parameter.png" />
+                    		{{#if project.parameters.length}}
+                    		<span onclick="buildPipeline.fillDialog('${app.rootUrl}{{build.url}}parameters', 'Parameters for {{project.name}} #{{build.number}}')">
+                    			<img title="This job has parameters" alt="This job has parameters" src="${hasParameterIconUrl}"/>
+                    		</span>
+                    		{{else}}
+                    		<img title="This job has parameters" alt="This job has parameters" src="${hasParameterIconUrl}"/>
+                    		{{/if}}
+                    	{{/unless}}
+                    {{/unless}}
+                    {{#unless build.isPending}}
+                       {{#unless build.isReadyToBeManuallyBuilt}}
+                       <j:set var="hasPromotionUrl" value="${rootURL}/images/24x24/star.png" />
+                            {{#if build.isComplete}}
+                                 <span onclick="buildPipeline.fillDialog('${app.rootUrl}{{build.url}}promotion', 'Promotion for {{project.name}} #{{build.number}}')">
+                                    <img title="Promotion" alt="promotion" src="${hasPromotionUrl}"/>
+                                </span>
+                            {{else}}
+                                <img title="Promotion" alt="promotion" src="${hasPromotionUrl}"/>
+                            {{/if}}
+                        {{/unless}}
+                    {{/unless}}
+                    <!-- <j:set var="hasPromotionUrl" value="${rootURL}/images/24x24/star.png" />
+                            <span onclick="buildPipeline.fillDialog('${app.rootUrl}{{build.url}}promotion', 'Promotion for {{project.name}} #{{build.number}}')">
+                                <img title="Promotion" alt="promotion" src="${hasPromotionUrl}"/>
+                            </span>
+                    {{#unless build.isPending}}
+                       {{#unless build.isReadyToBeManuallyBuilt}}
+                       <j:set var="hasEditBuildOption" value="${rootURL}/images/24x24/notepad.png" />
+                    		{{#if build.isComplete}}
+                    			<span onclick="buildPipeline.fillDialog('${app.rootUrl}{{build.url}}configure', 'Description {{project.name}} #{{build.number}}')">
+                    				<img title="Comment" alt="Comment" src="${hasEditBuildOption}"/>
+                    			</span>
+                    		{{else}}
+                    			<img title="Comment" alt="Comment" src="${hasEditBuildOption}"/>
+                    		{{/if}}
+                      {{/unless}}
+                    {{/unless}} -->
                     {{#unless build.isPending}}
                         {{#unless build.isReadyToBeManuallyBuilt}}
                             <j:set var="consoleOutputIconUrl" value="${rootURL}/images/16x16/terminal.png" />
@@ -97,7 +133,7 @@
                                     </a>
                                 </j:when>
                                 <j:otherwise>
-                            <span onclick="buildPipeline.fillDialog('${app.rootUrl}{{build.url}}console', 'Console output for {{project.name}} #{{build.number}}')">
+                                    <span onclick="buildPipeline.fillDialog('${app.rootUrl}{{build.url}}console', 'Console output for {{project.name}} #{{build.number}}')">
                                         <img title="console" alt="console" src="${consoleOutputIconUrl}" />
                                     </span>
                                 </j:otherwise>
@@ -105,7 +141,7 @@
                         {{/unless}}
                     {{/unless}}
 
-                    {{#if build.isRerunnable}}
+                   {{#if build.isRerunnable}}
                         {{#if build.isSuccess}}
                             {{#if ${!from.triggerOnlyLatestJob}}}
                             <j:if test="${from.hasBuildPermission()}">
